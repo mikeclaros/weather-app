@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { DayDisplay } from './DayDisplay'
 import { DaysDisplay } from './DaysDisplay'
 import { Graph } from './Graph'
-import { GeoLoc } from './GeoLoc'
 
 
 
@@ -59,6 +58,9 @@ export function Container() {
                     <input name='zipcode' placeholder='Enter Zipcode'></input>
                 </form>
                 {console.log('Weather data?: ', (weatherData.length != 0) ? weatherData : 'none')}
+                <div>
+                    <DayDisplay value={weatherData.current_weather} />
+                </div>
             </div>
             <div>
                 <DaysDisplay />
