@@ -18,8 +18,9 @@ export function Container() {
     }
 
     const searchZipcode = (input) => {
-        if (input != "" && input != undefined) {
-            let url = `https://geocode.maps.co/search?q=${input}`
+        let geocodeDown = true
+        if (geocodeDown) {
+            let url = `https://api.open-meteo.com/v1/forecast?latitude=34.125&longitude=-118.25&hourly=temperature_2m&temperature_unit=fahrenheit&daily=apparent_temperature_max,apparent_temperature_min&current_weather=true&timezone=auto`
             const req = new XMLHttpRequest()
             req.open('GET', url)
             req.responseType = 'json'
@@ -27,23 +28,38 @@ export function Container() {
 
             req.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
-                    // document.getElementById("demo").innerHTML =
-                    //     this.responseText;
-                    let object = this.response[0]
-                    let lat = object.lat
-                    let lon = object.lon
-                    console.log(`lat: ${lat}, lon: ${lon}`)
-                    let weatherURL = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m&temperature_unit=fahrenheit&current_weather=true&timezone=auto`
+                    console.log('geocode used hardcoded weather url to continue developing');
+                    setWeatherData(() => this.response)
+                }
+            }
+        } else {
+            if (input != "" && input != undefined) {
+                let url = `https://geocode.maps.co/search?q=${input}`
+                const req = new XMLHttpRequest()
+                req.open('GET', url)
+                req.responseType = 'json'
+                req.send()
 
-                    const nextReq = new XMLHttpRequest()
-                    nextReq.open('GET', weatherURL)
-                    nextReq.responseType = 'json'
-                    nextReq.send()
+                req.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        // document.getElementById("demo").innerHTML =
+                        //     this.responseText;
+                        let object = this.response[0]
+                        let lat = object.lat
+                        let lon = object.lon
+                        console.log(`lat: ${lat}, lon: ${lon}`)
+                        let weatherURL = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m&temperature_unit=fahrenheit&current_weather=true&timezone=auto`
 
-                    nextReq.onreadystatechange = function () {
-                        if (this.readyState == 4 && this.status == 200) {
-                            console.log('JSON RECEIVED: ', this.response)
-                            setWeatherData(() => this.response)
+                        const nextReq = new XMLHttpRequest()
+                        nextReq.open('GET', weatherURL)
+                        nextReq.responseType = 'json'
+                        nextReq.send()
+
+                        nextReq.onreadystatechange = function () {
+                            if (this.readyState == 4 && this.status == 200) {
+                                console.log('JSON RECEIVED: ', this.response)
+                                setWeatherData(() => this.response)
+                            }
                         }
                     }
                 }
@@ -63,10 +79,10 @@ export function Container() {
                 </div>
             </div>
             <div>
-                <DaysDisplay />
+                <Graph value={weatherData.hourly} />
             </div>
             <div>
-                <Graph value={weatherData.hourly} />
+                <DaysDisplay value={weatherData.daily} />
             </div>
         </div>
     )
