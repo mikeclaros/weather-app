@@ -66,7 +66,7 @@ export function Container() {
                 <DaysDisplay />
             </div>
             <div>
-                <Graph />
+                <Graph value={weatherData.hourly} />
             </div>
         </div>
     )
