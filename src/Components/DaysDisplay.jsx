@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../index.css'
+import { backgroundPicker } from '../Utils/backgroundPicker';
 
 export function DaysDisplay({ value }) {
     const [days, setDays] = useState([])
@@ -39,10 +40,10 @@ export function DaysDisplay({ value }) {
         let day = weekdays.get(id)
         let arr = days[id]
         return (
-            <div id={day} key={day} className='div-outer-border'>
+            <div id={day} key={day} className='days-style'>
                 <div className='div-sm-pd' id='Time'>{arr[0]}</div>
-                <div className='div-sm-pd' id='Max'>{arr[1]}</div>
-                <div className='div-sm-pd' id='Min'>{arr[2]}</div>
+                <div className={'div-sm-pd ' + backgroundPicker(arr[1])} id='Max'>{arr[1]}</div>
+                <div className={'div-sm-pd ' + backgroundPicker(arr[2])} id='Min'>{arr[2]}</div>
             </div>
         )
     }

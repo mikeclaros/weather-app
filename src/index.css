@@ -5,8 +5,9 @@
     align-items: stretch;
 }
 
-.div-outer-border {
+.days-style {
     border: 1px solid black;
+    width: calc(100%/7);
 }
 
 .div-sm-pd {
