@@ -33,6 +33,10 @@
     font-family: 'Courier New', Courier, monospace;
 }
 
+.graph-paper-style {
+    background-color: #c8f5fa;
+}
+
 .background-cool {
     background-color: rgb(75, 63, 248);
 }

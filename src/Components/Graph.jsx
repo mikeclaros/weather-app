@@ -31,7 +31,7 @@ export function Graph({ value }) {
     }
 
     return (
-        <div>
+        <div className='graph-paper-style'>
             {console.log(`hours array len: ${hours.length} ${hours}\ntemps array len: ${temps.length} ${temps}`)}
             <Plot
                 data={[
@@ -44,7 +44,14 @@ export function Graph({ value }) {
                     }
 
                 ]}
-                layout={{ width: 500, height: 300, title: 'Today\'s Temps' }}
+                layout={{
+                    width: 500,
+                    height: 300,
+                    title: 'Today\'s Hourly Temperatures',
+                    font: { family: 'monospace', size: 12 },
+                    plot_bgcolor: "#c8f5fa",
+                    paper_bgcolor: "#c8f5fa",
+                }}
             />
         </div>
     )
