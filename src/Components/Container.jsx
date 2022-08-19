@@ -18,7 +18,7 @@ export function Container() {
     }
 
     const searchZipcode = (input) => {
-        let geocodeDown = true
+        let geocodeDown = false //might put in a backup geocoder
         if (geocodeDown) {
             let url = `https://api.open-meteo.com/v1/forecast?latitude=34.125&longitude=-118.25&hourly=temperature_2m&temperature_unit=fahrenheit&daily=apparent_temperature_max,apparent_temperature_min&current_weather=true&timezone=auto`
             const req = new XMLHttpRequest()
@@ -63,6 +63,8 @@ export function Container() {
                         }
                     }
                 }
+            } else {
+                console.log('no input found')
             }
         }
     }
