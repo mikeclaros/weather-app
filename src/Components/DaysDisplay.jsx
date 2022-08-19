@@ -42,8 +42,8 @@ export function DaysDisplay({ value }) {
         return (
             <div id={day} key={day} className='days-style'>
                 <div className='div-sm-pd background-entry' id='Time'>{arr[0]}</div>
-                <div className={'div-sm-pd ' + backgroundPicker(arr[1])} id='Max'>{arr[1]}</div>
-                <div className={'div-sm-pd ' + backgroundPicker(arr[2])} id='Min'>{arr[2]}</div>
+                <div className={'div-sm-pd ' + backgroundPicker(arr[1])} id='Max'>{arr[1] + String.fromCharCode(176)}</div>
+                <div className={'div-sm-pd ' + backgroundPicker(arr[2])} id='Min'>{arr[2] + String.fromCharCode(176)}</div>
             </div>
         )
     }
