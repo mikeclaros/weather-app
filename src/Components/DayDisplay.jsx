@@ -13,10 +13,20 @@ export function DayDisplay({ value }) {
         }
     }
 
+    const determineBackground = () => {
+        if (temp < 78.0) {
+            return 'background-cool'
+        } else if (temp > 78.0 && temp < 88.0) {
+            return 'background-sunny'
+        } else if (temp > 88.0) {
+            return 'background-hot'
+        }
+    }
+
     return (
-        <div>
-            <h2>Current Temp {temp}</h2>
-            <h2>Current Time {time}</h2>
+        <div className={determineBackground() + ' auto-width current-day-style'}>
+            <h2 className='div-sm-pd'>Hour {new Date(time).toLocaleTimeString("us-en", { hour: "2-digit", minute: "2-digit" })}</h2>
+            <h2 className='div-sm-pd'>{temp + " " + String.fromCharCode(176) + "F"}</h2>
         </div>
     )
 }

@@ -12,3 +12,39 @@
 .div-sm-pd {
     padding: 8px;
 }
+
+.thin-pd {
+    padding: 1px;
+}
+
+.min-width {
+    width: min-content;
+}
+
+.auto-width {
+    width: auto;
+}
+
+/* .fit-width {
+    width: fit-content;
+} */
+
+.current-day-style {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.background-cool {
+    background-color: rgb(75, 63, 248);
+}
+
+.background-sunny {
+    background-color: rgba(247, 197, 18, 0.973);
+}
+
+.background-hot {
+    background-color: rgb(237, 82, 39);
+}
+
+.background-entry {
+    background-color: rgb(173, 201, 224);
+}

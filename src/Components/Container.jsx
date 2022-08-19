@@ -68,8 +68,8 @@ export function Container() {
     }
 
     return (
-        <div>
-            <div>
+        <div className='min-width'>
+            <div className='background-entry'>
                 <form onSubmit={(e) => handleSubmit(e)}>
                     <input name='zipcode' placeholder='Enter Zipcode'></input>
                 </form>
