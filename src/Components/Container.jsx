@@ -9,6 +9,7 @@ export function Container() {
     const [zipcode, setZipcode] = useState('')
     const [geoObj, setGeoObj] = useState({})
     const [weatherData, setWeatherData] = useState([])
+
     useEffect(() => { searchZipcode(zipcode) }, [zipcode])
     useEffect(() => { searchGeoObj(geoObj) }, [geoObj])
 
@@ -69,11 +70,26 @@ export function Container() {
         }
     }
 
+    function dataHelper(lat, lon) {
+        WeatherData.lat = lat
+        WeatherData.lon = lon
+        WeatherData.getData()
+    }
+
     const searchZipcode = (input) => {
-        console.log("Searching zipcode...")
-        let testing = true
-        if (input != "" && input != undefined && !testing) {
-            let url = `https://geocode.maps.co/search?q=${input}`
+        let testing = false
+        let storedEntries = JSON.parse(localStorage.getItem('zipToGeo'))
+        let zipMap = (storedEntries != null) ? new Map(Object.entries(storedEntries)) : new Map()
+
+        if (zipMap.size != 0 && zipMap.get(zipcode) != undefined) {
+            //entry match
+            console.log('Entry match found!!!', zipcode);
+            let entry = zipMap.get(zipcode)
+            dataHelper(entry.lat, entry.lon)
+        } else if (input != "" && input != undefined && !testing) {
+            // no entry match, new zipcode
+            console.log('no match start searching zipcode')
+            let url = `https://geocode.maps.co/search?q=${input},USA`
             const req = new XMLHttpRequest()
             req.open('GET', url)
             req.responseType = 'json'
@@ -82,38 +98,18 @@ export function Container() {
 
             req.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
-                    let dataObj = new WeatherData()
-                    let lat = this.response[0].lat
-                    let lon = this.response[0].lon
+                    let latVal = this.response[0].lat
+                    let lonVal = this.response[0].lon
 
-                    dataObj.lat = lat
-                    dataObj.lon = lon
-                    dataObj.getData()
+                    //cache zipcode
+                    let entriesObj = JSON.parse(localStorage.getItem('zipToGeo'))
+                    let remap = new Map(Object.entries(entriesObj))
+                    remap.set(zipcode, { lat: latVal, lon: lonVal })
+                    localStorage.setItem('zipToGeo', JSON.stringify(Object.fromEntries(remap)))
+
+                    // call weather api
+                    dataHelper(latVal, lonVal)
                 }
-                // if (this.readyState == 4 && this.status == 200) {
-                //     // document.getElementById("demo").innerHTML =
-                //     //     this.responseText;
-                //     let object = this.response[0]
-                //     let lat = object.lat
-                //     let lon = object.lon
-                //     console.log(`lat: ${lat}, lon: ${lon}`)
-                //     let weatherURL = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m&temperature_unit=fahrenheit&current_weather=true&timezone=auto`
-
-                //     const nextReq = new XMLHttpRequest()
-                //     nextReq.open('GET', weatherURL)
-                //     nextReq.responseType = 'json'
-                //     nextReq.send()
-
-                //     nextReq.onreadystatechange = function () {
-                //         if (this.readyState == 4 && this.status == 200) {
-                //             console.log('JSON RECEIVED: ', this.response)
-                //             setWeatherData(() => this.response)
-                //         }
-                //     }
-                // } else {
-                //     let obj = new BrowserGeoCode()
-                //     obj.geocoder()
-                // }
             }
         }
     }
@@ -128,7 +124,6 @@ export function Container() {
                     <button className='div-sm-margin' name='geoloc' onClick={(e) => handleGeoLocButtonClick(e)}>Use GeoLocation?</button>
                 </div>
             </div>
-            {console.log('Weather data?: ', (weatherData.length != 0) ? weatherData : 'none')}
             <div>
                 <DayDisplay value={weatherData.current_weather} />
             </div>
