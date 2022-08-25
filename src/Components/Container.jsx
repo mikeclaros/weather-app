@@ -48,7 +48,7 @@ export function Container() {
         data: {},
         getData: function () {
             //let weatherURL = `https://api.open-meteo.com/v1/forecast?latitude=${this.lat}&longitude=${this.lon}&hourly=temperature_2m&temperature_unit=fahrenheit&current_weather=true&timezone=auto`
-            this.url = `https://api.open-meteo.com/v1/forecast?latitude=${this.lat}&longitude=${this.lon}&hourly=temperature_2m&temperature_unit=fahrenheit&current_weather=true&timezone=auto`
+            this.url = `https://api.open-meteo.com/v1/forecast?latitude=${this.lat}&longitude=${this.lon}&hourly=temperature_2m&temperature_unit=fahrenheit&current_weather=true&timezone=auto&daily=apparent_temperature_max,apparent_temperature_min`
             this.req.open('GET', this.url)
             this.req.responseType = 'json'
             this.req.send()
@@ -130,6 +130,7 @@ export function Container() {
             <div>
                 <Graph value={weatherData.hourly} />
             </div>
+            {console.log('weather daily: ', weatherData.daily)}
             <div>
                 <DaysDisplay value={weatherData.daily} />
             </div>
