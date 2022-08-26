@@ -7,6 +7,7 @@ import { Graph } from './Graph'
 
 export function Container() {
     const [zipcode, setZipcode] = useState('')
+    const [cityName, setCityName] = useState('')
     const [geoObj, setGeoObj] = useState({})
     const [weatherData, setWeatherData] = useState([])
 
@@ -24,20 +25,14 @@ export function Container() {
     }
 
     function handleGeoLocButtonClick(e) {
-        BrowserGeoCode.geocoder()
-    }
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((pos) => {
+                //set lat lon for api request
+                setGeoObj(() => ({ ...geoObj, lat: pos.coords.latitude, lon: pos.coords.longitude }))
+                setCityName(() => '') //if allow clicked we'll reset city, to not confuse from past searches
+            })
+        }
 
-    const BrowserGeoCode = {
-        geocoder: function () {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition((pos) => {
-                    console.log('in geocoder', this)
-                    // this.lat = pos.coords.latitude
-                    // this.lon = pos.coords.longitude
-                    setGeoObj(() => ({ ...geoObj, lat: pos.coords.latitude, lon: pos.coords.longitude }))
-                })
-            }
-        },
     }
 
     const WeatherData = {
@@ -47,7 +42,6 @@ export function Container() {
         lon: NaN,
         data: {},
         getData: function () {
-            //let weatherURL = `https://api.open-meteo.com/v1/forecast?latitude=${this.lat}&longitude=${this.lon}&hourly=temperature_2m&temperature_unit=fahrenheit&current_weather=true&timezone=auto`
             this.url = `https://api.open-meteo.com/v1/forecast?latitude=${this.lat}&longitude=${this.lon}&hourly=temperature_2m&temperature_unit=fahrenheit&current_weather=true&timezone=auto&daily=apparent_temperature_max,apparent_temperature_min`
             this.req.open('GET', this.url)
             this.req.responseType = 'json'
@@ -77,6 +71,7 @@ export function Container() {
     }
 
     const searchZipcode = (input) => {
+        console.log("Searching zipcode")
         let testing = false
         let storedEntries = JSON.parse(localStorage.getItem('zipToGeo'))
         let zipMap = (storedEntries != null) ? new Map(Object.entries(storedEntries)) : new Map()
@@ -85,6 +80,7 @@ export function Container() {
             //entry match
             console.log('Entry match found!!!', zipcode);
             let entry = zipMap.get(zipcode)
+            setCityName(() => entry.city)
             dataHelper(entry.lat, entry.lon)
         } else if (input != "" && input != undefined && !testing) {
             // no entry match, new zipcode
@@ -93,19 +89,20 @@ export function Container() {
             const req = new XMLHttpRequest()
             req.open('GET', url)
             req.responseType = 'json'
-            let geocodeReady = true;
             req.send()
 
             req.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     let latVal = this.response[0].lat
                     let lonVal = this.response[0].lon
+                    let cityVal = this.response[0].display_name.split(",")[0] //location displayed like so: "Beverly Hills, Los Angeles County, California, 90210, United States"
+                    setCityName(() => cityVal)
 
-                    //cache zipcode
-                    let entriesObj = JSON.parse(localStorage.getItem('zipToGeo'))
-                    let remap = new Map(Object.entries(entriesObj))
-                    remap.set(zipcode, { lat: latVal, lon: lonVal })
-                    localStorage.setItem('zipToGeo', JSON.stringify(Object.fromEntries(remap)))
+                    //cache geolocation data
+                    //first time entering zipcode therefore new Map object needed
+                    let initMap = new Map()
+                    initMap.set(zipcode, { lat: latVal, lon: lonVal, city: cityVal })
+                    localStorage.setItem('zipToGeo', JSON.stringify(Object.fromEntries(initMap)))
 
                     // call weather api
                     dataHelper(latVal, lonVal)
@@ -125,12 +122,11 @@ export function Container() {
                 </div>
             </div>
             <div>
-                <DayDisplay value={weatherData.current_weather} />
+                <DayDisplay value={[weatherData.current_weather, cityName]} />
             </div>
             <div>
                 <Graph value={weatherData.hourly} />
             </div>
-            {console.log('weather daily: ', weatherData.daily)}
             <div>
                 <DaysDisplay value={weatherData.daily} />
             </div>
