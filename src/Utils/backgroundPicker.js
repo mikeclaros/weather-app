@@ -5,7 +5,7 @@ export function backgroundPicker(temp) {
         return 'background-cool'
     } else if (temp > 78.0 && temp < 88.0) {
         return 'background-sunny'
-    } else if (temp > 88.0) {
+    } else if (temp >= 88.0) {
         return 'background-hot'
     }
 }

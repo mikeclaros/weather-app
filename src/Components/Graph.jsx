@@ -20,7 +20,8 @@ export function Graph({ value }) {
             let item = new Date(value.time[0])
             let i = 0
             for (let today = new Date(); today.toDateString() === item.toDateString();) {
-                tempsArr.push(value.temperature_2m[i])
+                //tempsArr.push(value.temperature_2m[i])
+                tempsArr.push(value.apparent_temperature[i])
                 timeArr.push(value.time[i])
                 item = new Date(value.time[i++])
             }
