@@ -117,9 +117,9 @@ export function Container() {
             <div className='background-entry'>
                 <div className='div-entry-col'>
                     <form onSubmit={(e) => handleSubmit(e)}>
-                        <input name='zipcode' placeholder='Enter Zipcode'></input>
+                        <input className='entry-field' name='zipcode' placeholder='Search with zip or location'></input>
                     </form>
-                    <button className='div-sm-margin' name='geoloc' onClick={(e) => handleGeoLocButtonClick(e)}>Use GeoLocation?</button>
+                    <button className='div-sm-margin' name='geoloc' onClick={(e) => handleGeoLocButtonClick(e)}>Use GeoLocation</button>
                 </div>
             </div>
             <div>

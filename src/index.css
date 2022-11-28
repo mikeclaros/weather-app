@@ -13,6 +13,10 @@
     margin: 2%;
 }
 
+.entry-field {
+    width: 150%;
+}
+
 .days-style {
     border: 1px solid black;
     width: calc(100%/7);
