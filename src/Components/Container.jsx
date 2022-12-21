@@ -73,7 +73,6 @@ export function Container() {
 
     const searchZipcode = (input) => {
         console.log("Searching zipcode")
-        let testing = false
         let storedEntries = JSON.parse(localStorage.getItem('zipToGeo'))
         let zipMap = (storedEntries != null) ? new Map(Object.entries(storedEntries)) : new Map()
 
@@ -83,20 +82,37 @@ export function Container() {
             let entry = zipMap.get(zipcode)
             setCityName(() => entry.city)
             dataHelper(entry.lat, entry.lon)
-        } else if (input != "" && input != undefined && !testing) {
-            // no entry match, new zipcode
+        } else if (input != "" && input != undefined) {
+            // input received but no entry match, new zipcode
             console.log('no match start searching zipcode')
-            let url = `https://geocode.maps.co/search?q=${input},USA`
+            //let url = `https://geocode.maps.co/search?q=${input},USA` //old api used, may implement a switch to swap to this one as a fallback
+            let encodedInput = encodeURIComponent(input)
+            let url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodedInput}`
+            console.log("URL: " + url)
             const req = new XMLHttpRequest()
             req.open('GET', url)
             req.responseType = 'json'
             req.send()
 
             req.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    let latVal = this.response[0].lat
-                    let lonVal = this.response[0].lon
-                    let cityVal = this.response[0].display_name.split(",")[0] //location displayed like so: "Beverly Hills, Los Angeles County, California, 90210, United States"
+                if (this.readyState == 4 && this.status == 200 && this.response.results !== undefined) {
+                    let latVal = 0
+                    let lonVal = 0
+                    let cityVal = ''
+
+                    // find first likely match
+                    console.log('what is: ' + this.response.results)
+                    this.response.results.every(element => {
+                        if (element.country === "United States") {
+                            console.log('here in results')
+                            latVal = element.latitude
+                            lonVal = element.longitude
+                            cityVal = element.name
+                            return false;
+                        }
+                        return true;
+                    })
+                    console.log('open-meteo returned: ' + latVal + ' ' + lonVal + ' ' + cityVal)
                     setCityName(() => cityVal)
 
                     //cache geolocation data
