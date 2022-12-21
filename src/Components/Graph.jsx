@@ -5,6 +5,7 @@ import Plot from 'react-plotly.js';
 export function Graph({ value }) {
     const [hours, setHours] = useState([])
     const [temps, setTemps] = useState([])
+    const [temps2m, setTemps2m] = useState([])
 
     useEffect(() => { handleData(value) }, [value])
 
@@ -16,11 +17,12 @@ export function Graph({ value }) {
             console.log(`today is ${today}`)
 
             let tempsArr = []
+            let tempsArr2m = []
             let timeArr = []
             let item = new Date(value.time[0])
             let i = 0
             for (let today = new Date(); today.toDateString() === item.toDateString();) {
-                //tempsArr.push(value.temperature_2m[i])
+                tempsArr2m.push(value.temperature_2m[i])
                 tempsArr.push(value.apparent_temperature[i])
                 timeArr.push(value.time[i])
                 item = new Date(value.time[i++])
@@ -28,6 +30,7 @@ export function Graph({ value }) {
 
             setHours(() => timeArr)
             setTemps(() => tempsArr)
+            setTemps2m(() => tempsArr2m)
         }
     }
 
@@ -42,12 +45,21 @@ export function Graph({ value }) {
                         type: 'scatter',
                         mode: 'lines+markers',
                         marker: { color: 'red' },
+                        name: 'temp feel'
+                    },
+                    {
+                        x: [...hours],
+                        y: [...temps2m],
+                        type: 'scatter',
+                        mode: 'lines+markers',
+                        marker: { color: 'blue' },
+                        name: 'temp 2m above ground'
                     }
 
                 ]}
                 layout={{
-                    width: 500,
-                    height: 300,
+                    width: 600,
+                    height: 350,
                     title: 'Today\'s Hourly Temperatures',
                     font: { family: 'monospace', size: 12 },
                     plot_bgcolor: "#c8f5fa",
