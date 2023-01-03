@@ -10,9 +10,11 @@ export function Container() {
     const [cityName, setCityName] = useState('')
     const [geoObj, setGeoObj] = useState({})
     const [weatherData, setWeatherData] = useState([])
+    const [latlon, setLatLon] = useState([])
 
     useEffect(() => { searchZipcode(zipcode) }, [zipcode])
     useEffect(() => { searchGeoObj(geoObj) }, [geoObj])
+    useEffect(() => { setCityNameForZipOrGeo(latlon) }, [latlon])
 
     function handleSubmit(e) {
 
@@ -30,9 +32,29 @@ export function Container() {
                 //set lat lon for api request
                 setGeoObj(() => ({ ...geoObj, lat: pos.coords.latitude, lon: pos.coords.longitude }))
                 setCityName(() => '') //if allow clicked we'll reset city, to not confuse from past searches
+                setLatLon(() => [pos.coords.latitude, pos.coords.longitude])
             })
         }
+    }
 
+    const setCityNameForZipOrGeo = (input) => {
+        if (input.length > 0 & input !== undefined) {
+            let lat = input[0]
+            let lon = input[1]
+            console.log('lat: ' + lat + '\nlon: ' + lon)
+            let url = `https://geocode.maps.co/reverse?lat=${lat}&lon=${lon}`
+            const req = new XMLHttpRequest()
+            req.open('GET', url)
+            req.responseType = 'json'
+            req.send()
+            req.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    let city = this.response.address.city
+                    console.log('Setting city: ' + city)
+                    setCityName(() => city)
+                }
+            }
+        }
     }
 
     const WeatherData = {
@@ -50,7 +72,7 @@ export function Container() {
 
             this.req.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
-                    console.log('JSON RECEIVED: ', this.response)
+                    console.log('JSON RECEIVED(open-meteo): ', this.response)
                     setWeatherData(() => this.response)
                 }
             }
