@@ -38,9 +38,22 @@ export function Container() {
     }
 
     const setCityNameForZipOrGeo = (input) => {
-        if (input.length > 0 & input !== undefined) {
-            let lat = input[0]
-            let lon = input[1]
+        let { lat, lon, key } = ''
+        if (input !== undefined && input.length > 0) {
+            lat = input[0].toFixed(2)
+            lon = input[1].toFixed(2)
+            key = lat.toString() + "," + lon.toString()
+        } else {
+            return
+        }
+
+        let localCache = JSON.parse(localStorage.getItem('geoCache'))
+        let geoCache = (localCache != null) ? new Map(Object.entries(localCache)) : new Map()
+
+        console.log('geocache key: ' + key)
+        let item = geoCache.get(key)
+        if (item === undefined) {
+            //no key match input given
             console.log('lat: ' + lat + '\nlon: ' + lon)
             let url = `https://geocode.maps.co/reverse?lat=${lat}&lon=${lon}`
             const req = new XMLHttpRequest()
@@ -52,8 +65,21 @@ export function Container() {
                     let city = this.response.address.city
                     console.log('Setting city: ' + city)
                     setCityName(() => city)
+
+                    //set geomap
+                    let geoMap = new Map()
+                    let lat = latlon[0].toFixed(2)
+                    let lon = latlon[1].toFixed(2)
+                    let key = lat.toString() + "," + lon.toString()
+                    geoMap.set(key, city)
+                    //set item in local storage
+                    localStorage.setItem('geoCache', JSON.stringify(Object.fromEntries(geoMap)))
                 }
             }
+        } else {
+            //geocache key match
+            let city = geoCache.get(key)
+            setCityName(() => city)
         }
     }
 
