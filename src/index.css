@@ -1,7 +1,7 @@
 .min-width,
 .five-day-layout,
 .graph-paper-style {
-    width: 70vw;
+    width: 85vw;
 }
 
 .five-day-layout {
@@ -20,7 +20,7 @@
 }
 
 .entry-field {
-    width: 150%;
+    width: 125%;
 }
 
 .days-style {
