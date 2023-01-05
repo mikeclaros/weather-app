@@ -1,3 +1,9 @@
+.min-width,
+.five-day-layout,
+.graph-paper-style {
+    width: 70vw;
+}
+
 .five-day-layout {
     display: flex;
     flex-direction: row;
@@ -19,11 +25,12 @@
 
 .days-style {
     border: 1px solid black;
-    width: calc(100%/7);
+    width: calc(115%/7);
 }
 
 .div-sm-pd {
     padding: 8px;
+    font-size: 1vm;
 }
 
 .div-sm-margin {
@@ -34,17 +41,9 @@
     padding: 1px;
 }
 
-.min-width {
-    width: min-content;
-}
-
 .auto-width {
     width: auto;
 }
-
-/* .fit-width {
-    width: fit-content;
-} */
 
 .current-day-style {
     font-family: 'Courier New', Courier, monospace;

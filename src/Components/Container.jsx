@@ -186,15 +186,9 @@ export function Container() {
                     <button className='div-sm-margin' name='geoloc' onClick={(e) => handleGeoLocButtonClick(e)}>Use GeoLocation</button>
                 </div>
             </div>
-            <div>
-                <DayDisplay value={[weatherData.current_weather, cityName]} />
-            </div>
-            <div>
-                <Graph value={weatherData.hourly} />
-            </div>
-            <div>
-                <DaysDisplay value={weatherData.daily} />
-            </div>
+            <DayDisplay value={[weatherData.current_weather, cityName]} />
+            <Graph value={weatherData.hourly} />
+            <DaysDisplay value={weatherData.daily} />
         </div>
     )
 }

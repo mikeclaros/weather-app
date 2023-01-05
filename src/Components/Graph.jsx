@@ -7,7 +7,29 @@ export function Graph({ value }) {
     const [temps, setTemps] = useState([])
     const [temps2m, setTemps2m] = useState([])
 
+    const MOBILE_REGEX = /Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i
+    const isMobile = ((MOBILE_REGEX).test(navigator.userAgent)) ? true : false
+
     useEffect(() => { handleData(value) }, [value])
+
+
+    const mobileLayout = {
+        autosize: true,
+        width: 450,
+        height: 500,
+        title: 'Today\'s Hourly Temperatures',
+        font: { family: 'monospace', size: 12 },
+        plot_bgcolor: "#c8f5fa",
+        paper_bgcolor: "#c8f5fa",
+    }
+
+    const normalLayout = {
+        autosize: true,
+        title: 'Today\'s Hourly Temperatures',
+        font: { family: 'monospace', size: 12 },
+        plot_bgcolor: "#c8f5fa",
+        paper_bgcolor: "#c8f5fa",
+    }
 
     const handleData = (value) => {
         //plot data
@@ -57,42 +79,10 @@ export function Graph({ value }) {
                     }
 
                 ]}
-                layout={{
-                    width: 600,
-                    height: 350,
-                    title: 'Today\'s Hourly Temperatures',
-                    font: { family: 'monospace', size: 12 },
-                    plot_bgcolor: "#c8f5fa",
-                    paper_bgcolor: "#c8f5fa",
-                }}
+                layout={(isMobile) ? mobileLayout : normalLayout}
+                useResizeHandler={true}
+                style={{ width: '100%', height: '100%' }}
             />
         </div>
     )
 }
-
-//example react-plot from Plotly
-{/* <Plot
-
-data={[
-
-  {
-
-    x: [1, 2, 3],
-
-    y: [2, 6, 3],
-
-    type: 'scatter',
-
-    mode: 'lines+markers',
-
-    marker: {color: 'red'},
-
-  },
-
-  {type: 'bar', x: [1, 2, 3], y: [2, 5, 3]},
-
-]}
-
-layout={ {width: 320, height: 240, title: 'A Fancy Plot'} }
-
-/> */}

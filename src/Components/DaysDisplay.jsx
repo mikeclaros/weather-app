@@ -40,7 +40,7 @@ export function DaysDisplay({ value }) {
         ])
 
         let arr = days[id] // 0->time, 1->MaxTemp, 2->MinTemp
-        let date = arr[0].toLocaleString('en-US', { timeZone: 'UTC' }).split(",")[0]
+        let date = arr[0].toLocaleString('en-US', { timeZone: 'UTC', day: 'numeric', month: 'numeric' }).split(",")[0]
         let day = weekdays.get(arr[0].getDay())
         return (
             <div id={id} key={id} className='days-style'>
