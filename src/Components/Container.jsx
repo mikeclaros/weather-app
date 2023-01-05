@@ -183,7 +183,7 @@ export function Container() {
                     <form onSubmit={(e) => handleSubmit(e)}>
                         <input className='entry-field' name='zipcode' placeholder='Search with zip or location'></input>
                     </form>
-                    <button className='div-sm-margin' name='geoloc' onClick={(e) => handleGeoLocButtonClick(e)}>Use GeoLocation</button>
+                    {(window.isSecureContext) ? <button className='div-sm-margin' name='geoloc' onClick={(e) => handleGeoLocButtonClick(e)}>Use GeoLocation</button> : <React.Fragment></React.Fragment>}
                 </div>
             </div>
             <DayDisplay value={[weatherData.current_weather, cityName]} />
